@@ -1,0 +1,23 @@
+{
+  "name": "zendeskcodingchallenge",
+  "version": "1.0.0",
+  "description": "Zendesk Coding Challenge",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index",
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kmanbear/ZendeskCodingChallenge.git"
+  },
+  "author": "Kyle Xiong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kmanbear/ZendeskCodingChallenge/issues"
+  },
+  "homepage": "https://github.com/Kmanbear/ZendeskCodingChallenge#readme",
+  "dependencies": {
+    "inquirer": "^8.2.0"
+  }
+}
