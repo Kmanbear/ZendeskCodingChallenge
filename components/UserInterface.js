@@ -1,7 +1,8 @@
 const inquirer = require('inquirer');
 const ZendeskAPIWrapper = require('./ZendeskAPIWrapper');
+const TOKEN = require('../config')
 
-class Interface {
+class UserInterface {
     #questions = {
         homeQuestion: {
           type: 'rawlist',
@@ -17,13 +18,18 @@ class Interface {
         }
     }
 
-    #zendeskAPIWrapper = new ZendeskAPIWrapper()
+    #zendeskAPIWrapper = new ZendeskAPIWrapper(TOKEN)
       
     askForHomeCommand() {
         inquirer.prompt(this.#questions.homeQuestion).then(async (answer) => {
             switch(answer['choice']) {
                 case 'View All Tickets':
-                    console.log(await this.#zendeskAPIWrapper.getAllTickets())
+                    this.#zendeskAPIWrapper.resetPageNum()
+                    const ticketsJSON = await this.#zendeskAPIWrapper.getAllTicketsOnPage()
+                    ticketsJSON.forEach((ticket)=> {
+                        console.log(`Ticket Id: ${ticket.id}, Title: ${ticket.subject}, Description: ${ticket.description}`)
+                        console.log('----------------------------------------------------------------')
+                    })
                     this.askForPageCommand()
                     break;
                 case 'View Ticket by ID':
@@ -41,11 +47,12 @@ class Interface {
         inquirer.prompt(this.#questions.pageQuestion).then(async (answer) => {
             switch(answer['choice']) {
                 case 'Continue to Next Page':
-                    console.log(await this.#zendeskAPIWrapper.getAllTickets())
+                    this.#zendeskAPIWrapper.incrPageNum()
+                    console.log(await this.#zendeskAPIWrapper.getAllTicketsOnPage())
                     this.askForPageCommand()
                     break;
                 case 'Go Back Home':
-                    console.log('View Ticket by ID');
+                    this.#zendeskAPIWrapper.resetPageNum()
                     this.askForHomeCommand();
                     break;
             }
@@ -53,4 +60,4 @@ class Interface {
     }
 }
 
-module.exports = Interface
+module.exports = UserInterface

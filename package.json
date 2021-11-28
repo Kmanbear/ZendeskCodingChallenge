@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/Kmanbear/ZendeskCodingChallenge#readme",
   "dependencies": {
-    "inquirer": "^8.2.0"
+    "dotenv": "^10.0.0",
+    "fetch-headers": "^2.0.0",
+    "inquirer": "^8.2.0",
+    "node-fetch": "^2.6.6"
   }
 }

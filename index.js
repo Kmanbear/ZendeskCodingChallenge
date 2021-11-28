@@ -1,5 +1,5 @@
-const Interface = require('./components/Interface')
-const interface = new Interface()
+const Interface = require('./components/UserInterface')
+const userInterface = new Interface()
 
 console.log("Welcome to the Zendesk Ticket Viewer!")
-interface.askForHomeCommand()
+userInterface.askForHomeCommand()
