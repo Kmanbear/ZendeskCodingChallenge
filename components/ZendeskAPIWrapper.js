@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-// const Ticket = require('../Ticket/Ticket')
+const Ticket = require('./Ticket')
 
 class ZendeskAPIWrapper {
 
@@ -20,12 +20,16 @@ class ZendeskAPIWrapper {
         let url = `https://zcc438.zendesk.com/api/v2/tickets.json?page=${this.pageNum}&per_page=25`
         let apiResponse = await this.fetchRequest(url)
         if (apiResponse != null) {
-            return apiResponse.tickets
+            return apiResponse.tickets.map((ticket) => new Ticket(ticket))
         }
     }
   
     async getTicketById(id) {
-        return "Got ticket by id"
+        let url = `https://zcc438.zendesk.com/api/v2/tickets/${id}.json`
+        let apiResponse = await this.fetchRequest(url)
+        if (apiResponse != null) {
+            return new Ticket(apiResponse.ticket)
+        }
     }
 
     async fetchRequest(url) {
@@ -36,7 +40,7 @@ class ZendeskAPIWrapper {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-            // .then(() => console.log("API Error"))
+            // .then((response) => console.log("API Error"))
             .then(response => response.json())
             .catch(error => console.log(error))
     }

@@ -15,7 +15,19 @@ class UserInterface {
             name: 'choice',
             message: 'Continue to next page or go back to home?',
             choices: ['Continue to Next Page', 'Go Back Home'],
+        },
+        idQuestion: {
+            type: 'number',
+            name: 'choice',
+            message: 'Enter Ticket ID',
+        },
+        idPageQuestion: {
+            type: 'rawlist',
+            name: 'choice',
+            message: 'Search new ticket by id or go back to home?',
+            choices: ['Search New Ticket By Id', 'Go Back Home'],
         }
+
     }
 
     #zendeskAPIWrapper = new ZendeskAPIWrapper(TOKEN)
@@ -25,16 +37,12 @@ class UserInterface {
             switch(answer['choice']) {
                 case 'View All Tickets':
                     this.#zendeskAPIWrapper.resetPageNum()
-                    const ticketsJSON = await this.#zendeskAPIWrapper.getAllTicketsOnPage()
-                    ticketsJSON.forEach((ticket)=> {
-                        console.log(`Ticket Id: ${ticket.id}, Title: ${ticket.subject}, Description: ${ticket.description}`)
-                        console.log('----------------------------------------------------------------')
-                    })
+                    const tickets = await this.#zendeskAPIWrapper.getAllTicketsOnPage()
+                    console.table(tickets.map((ticket) => ticket.serialize()))
                     this.askForPageCommand()
                     break;
                 case 'View Ticket by ID':
-                    console.log(await this.#zendeskAPIWrapper.getTicketById())
-                    this.askForHomeCommand()
+                    this.askForIdCommand()
                     break;
                 case 'Quit Program':
                     console.log('Goodbye!')
@@ -53,9 +61,17 @@ class UserInterface {
                     break;
                 case 'Go Back Home':
                     this.#zendeskAPIWrapper.resetPageNum()
-                    this.askForHomeCommand();
+                    this.askForHomeCommand()
                     break;
             }
+        })
+    }
+
+    askForIdCommand() {
+        inquirer.prompt(this.#questions.idQuestion).then(async (answer) => {
+            const ticket = await this.#zendeskAPIWrapper.getTicketById(answer['choice'])
+            console.table([ticket.serialize()])
+            this.askForHomeCommand()
         })
     }
 }
