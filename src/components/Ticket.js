@@ -7,6 +7,11 @@ class Ticket {
         this.requesterId = object.requester_id
     }
 
+    /**
+    * Uses a regex search function to find and return the current page number from URL.
+    *
+    * @returns {String} Page number of the current URL.
+    */
     serialize() {
         return {
             id: this.id,
@@ -15,7 +20,7 @@ class Ticket {
             requesterId: this.requesterId
         }
     }
-    
+
 }
 
 module.exports = Ticket

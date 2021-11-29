@@ -4,12 +4,16 @@ const Ticket = require('./Ticket')
 class ZendeskAPIWrapper {
 
     constructor(token) {
-        this.token = token.TOKEN
+        this.token = token
         this.pageNum = 0
     }
 
+    getPageNum() {
+        return this.pageNum
+    }
+
     resetPageNum() {
-        this.pageNum = 0
+        this.pageNum = 1
     }
 
     incrPageNum() {
@@ -19,16 +23,20 @@ class ZendeskAPIWrapper {
     async getAllTicketsOnPage() {
         let url = `https://zcc438.zendesk.com/api/v2/tickets.json?page=${this.pageNum}&per_page=25`
         let apiResponse = await this.fetchRequest(url)
-        if (apiResponse != null) {
+        if (apiResponse != null && apiResponse.tickets != null) {
             return apiResponse.tickets.map((ticket) => new Ticket(ticket))
+        } else {
+            return null
         }
     }
   
     async getTicketById(id) {
         let url = `https://zcc438.zendesk.com/api/v2/tickets/${id}.json`
         let apiResponse = await this.fetchRequest(url)
-        if (apiResponse != null) {
+        if (apiResponse != null && apiResponse.ticket != null) {
             return new Ticket(apiResponse.ticket)
+        } else {
+            return null
         }
     }
 
@@ -40,7 +48,6 @@ class ZendeskAPIWrapper {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-            // .then((response) => console.log("API Error"))
             .then(response => response.json())
             .catch(error => console.log(error))
     }

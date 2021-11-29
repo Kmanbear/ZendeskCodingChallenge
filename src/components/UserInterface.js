@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const ZendeskAPIWrapper = require('./ZendeskAPIWrapper');
-const TOKEN = require('../config')
+const { TOKEN } = require('../config')
 
 class UserInterface {
     #questions = {
@@ -21,13 +21,6 @@ class UserInterface {
             name: 'choice',
             message: 'Enter Ticket ID',
         },
-        idPageQuestion: {
-            type: 'rawlist',
-            name: 'choice',
-            message: 'Search new ticket by id or go back to home?',
-            choices: ['Search New Ticket By Id', 'Go Back Home'],
-        }
-
     }
 
     #zendeskAPIWrapper = new ZendeskAPIWrapper(TOKEN)
@@ -37,8 +30,7 @@ class UserInterface {
             switch(answer['choice']) {
                 case 'View All Tickets':
                     this.#zendeskAPIWrapper.resetPageNum()
-                    const tickets = await this.#zendeskAPIWrapper.getAllTicketsOnPage()
-                    console.table(tickets.map((ticket) => ticket.serialize()))
+                    this.printTickets(await this.#zendeskAPIWrapper.getAllTicketsOnPage())
                     this.askForPageCommand()
                     break;
                 case 'View Ticket by ID':
@@ -56,7 +48,7 @@ class UserInterface {
             switch(answer['choice']) {
                 case 'Continue to Next Page':
                     this.#zendeskAPIWrapper.incrPageNum()
-                    console.log(await this.#zendeskAPIWrapper.getAllTicketsOnPage())
+                    this.printTickets(await this.#zendeskAPIWrapper.getAllTicketsOnPage())
                     this.askForPageCommand()
                     break;
                 case 'Go Back Home':
@@ -73,6 +65,10 @@ class UserInterface {
             console.table([ticket.serialize()])
             this.askForHomeCommand()
         })
+    }
+
+    printTickets(tickets) {
+        console.table(tickets.map((ticket) => ticket.serialize()))
     }
 }
 
