@@ -62,13 +62,17 @@ class UserInterface {
     askForIdCommand() {
         inquirer.prompt(this.#questions.idQuestion).then(async (answer) => {
             const ticket = await this.#zendeskAPIWrapper.getTicketById(answer['choice'])
-            console.table([ticket.serialize()])
+            this.printTickets([ticket])
             this.askForHomeCommand()
         })
     }
 
     printTickets(tickets) {
-        console.table(tickets.map((ticket) => ticket.serialize()))
+        if (tickets != null) {
+            console.table(tickets
+                .filter((e) => e)
+                .map((ticket) => ticket.serialize()))
+        }
     }
 }
 

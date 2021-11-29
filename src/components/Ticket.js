@@ -7,10 +7,9 @@ class Ticket {
         this.requesterId = object.requester_id
     }
 
-    /**
-    * Uses a regex search function to find and return the current page number from URL.
-    *
-    * @returns {String} Page number of the current URL.
+    /*
+    * The serialize function returns the fields of the ticket that you want to display to user.
+    * The serializer also preprocesses the data for displaying (trimming, shortening description)
     */
     serialize() {
         return {

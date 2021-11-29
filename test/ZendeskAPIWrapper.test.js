@@ -26,6 +26,12 @@ describe('ZendeskAPIWrapper ', () => {
 
         it('returns ticket with nonexisting id credentials', async () => {
             const zendeskAPIWrapper = new ZendeskAPIWrapper(TOKEN)
+            const ticket = await zendeskAPIWrapper.getTicketById(999999)
+            expect(ticket).toBeNull()
+        })
+
+        it('returns ticket with negative id credentials', async () => {
+            const zendeskAPIWrapper = new ZendeskAPIWrapper(TOKEN)
             const ticket = await zendeskAPIWrapper.getTicketById(-1)
             expect(ticket).toBeNull()
         })

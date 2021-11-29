@@ -40,6 +40,23 @@ class ZendeskAPIWrapper {
         }
     }
 
+    checkErrors(response) {
+        if (!response.ok) {
+          console.log('API Request Issue..')
+          switch (response.status) {
+            case 401:
+              throw response.statusText + " Couldn't authenticate"
+            case 404:
+              throw response.statusText + 'Ticket not found'
+            case 400:
+              throw response.statusText + 'Invalid ticket id'
+            default:
+              throw response.statusText
+          }
+        }
+        return response
+    }
+
     async fetchRequest(url) {
         return fetch(url, { 
             method: 'get', 
@@ -48,6 +65,7 @@ class ZendeskAPIWrapper {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
+            .then(this.checkErrors)
             .then(response => response.json())
             .catch(error => console.log(error))
     }
