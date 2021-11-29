@@ -22,7 +22,7 @@ $ npm install
 3. Navigate to the .env file. Write OAuth 2.0 token into .env file.
 
 ```
-$ TOKEN={API key here}
+TOKEN={API key here}
 ```
 
 4. Run the program with the following code.
@@ -57,15 +57,15 @@ $ npm test
 
 ### Design Choices
 
-#### Connect to the Zendesk API & Request the tickets for your account
+#### Connecting to Zendesk API Authorization
 
-Ticket requests within my application use the NPM node-fetch module which is a node.js version of the vanilla js ```window.fetch``` method. The module is lightweight and easy to use as it retains much of the functionality from the vanilla version.
+Ticket requests within my application use the NPM node-fetch module which is a node.js version of the vanilla js ```window.fetch``` method. The module makes it easy to write GET requests to get ticket data from the Zendesk API.
 
-The application uses OAuth 2.0 as the primary method of communicating credentials, using the ```Bearer Token``` syntax, within the request Authorization header. The token is in the .env file and is read in config.js using the NPM dotenv package. The OAuth 2.0 key is configured using the scope "tickets:read" which only allows for the application to read ticket data.
+The application uses OAuth 2.0 as the primary method of communicating credentials, using the ```Bearer Token``` syntax, within the request Authorization header. The token is in the .env file and is read in config.js using the NPM dotenv package. The OAuth 2.0 key can be configured in Zendesk's admin page using the scope "tickets:read" which only allows for the application to read ticket data.
 
 #### Getting User Input
 
-The application uses an NPM package called inquirer to generate questions and handle user inputs. The question are consolidated into an questions object, and the user input is read from the returned answer object. The inquirer package allows for clearer routing of which questions are asked, as after an answer is processed, a question can be recursively called.
+The application uses an NPM package called inquirer to generate questions and handle user inputs. The question are consolidated into an questions object, and the user input is read from the returned answer object. The inquirer package allows for clear routing of which questions are asked, as after an answer is processed, a question can be recursively called.
 
 #### Displaying Tickets
 
